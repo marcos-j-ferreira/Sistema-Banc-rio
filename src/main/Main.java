@@ -42,7 +42,6 @@ class ContaPupanca implements Conta{
     public double getSaldo(){
         return saldo;
     }
-
 }
 
 class ContaCorrente implements Conta{
@@ -75,12 +74,9 @@ class ContaCorrente implements Conta{
     public double getSaldo(){
         return saldo;
     }
-
 }
 
 class TestePopanca{
-
-    //static Conta c1 = new ContaCorrente(100);
     static Conta c1 = new ContaPupanca(100);
 
     public static void TestSacar(double value){
@@ -95,7 +91,6 @@ class TestePopanca{
         }catch (SaldoInsuficienteException e){
             System.out.println("Erro no saque: " + e.getMessage());
         }
-
     }
 
     public static void TestDeposito(double value){
@@ -110,36 +105,24 @@ class TestePopanca{
         }catch (SaldoInsuficienteException e){
             System.out.println("Erro no saque: " + e.getMessage());
         }
-
     }
 
     public final void testeD(){
-
-        TestDeposito(1);
-        TestDeposito(100);
-        TestDeposito(10.99);
-        TestDeposito(1.1);
-        TestDeposito(0.1);
-        TestDeposito(0);
-
+        double[] valores = {1,100,10.99,1.1,0,0.1,200}; 
+        for( int i = 0; i < valores.length; i++){
+            TestDeposito(valores[i]);
+        }
     }
-
+    
     public final void testeS(){
-
-        TestSacar(1);
-        TestSacar(10);
-        TestSacar(101);
-        TestSacar(1000);
-        TestSacar(0);
-    }
-
+        double[] valores = {1,100,10.99,1.1,0,0.1,1000}; 
+        for( int i = 0; i < valores.length; i++){
+            TestSacar(valores[i]);
+        }
 }
 
 class TesteCorrente{
-
     static Conta c1 = new ContaCorrente(100);
-    //static Conta c2 = new ContaPupanca(100);
-
     public static void TestSacar(double value){
 
         try{
@@ -152,9 +135,7 @@ class TesteCorrente{
         }catch (SaldoInsuficienteException e){
             System.out.println("Erro no saque: " + e.getMessage());
         }
-
     }
-
     public static void TestDeposito(double value){
 
         try{
@@ -167,42 +148,27 @@ class TesteCorrente{
         }catch (SaldoInsuficienteException e){
             System.out.println("Erro no saque: " + e.getMessage());
         }
-
     }
-
     public final void testeD(){
-
-        TestDeposito(1);
-        TestDeposito(100);
-        TestDeposito(10.99);
-        TestDeposito(1.1);
-        TestDeposito(0.1);
-        TestDeposito(0);
-
+        double[] valores = {1,100,10.99,1.1,0,0.1,200}; 
+        for( int i = 0; i < valores.length; i++){
+            TestDeposito(valores[i]);
+        }
     }
-
     public final void testeS(){
-
-        TestSacar(1);
-        TestSacar(10);
-        TestSacar(101);
-        TestSacar(1000);
-        TestSacar(0);
+        double[] valores = {1,100,10.99,1.1,0,0.1,1000}; 
+        for( int i = 0; i < valores.length; i++){
+            TestSacar(valores[i]);
+        }
     }
-
 }
-
-
-
 
 public class Main{
 
     public static void main(String[] args){
 
         TesteCorrente testeC = new TesteCorrente();
-        TestePopanca testeP = new TestePopanca()
-        teste.testeS();
-        tes
+        TestePopanca testeP = new TestePopanca();
+        testeC.testeD();
     }
 }
-
