@@ -81,21 +81,102 @@ class ContaCorrente implements Conta{
 }
 
 class Gerenciamento{
-   // Map<String, Conta> contas = new HashMap<>();
+    private final Map<String, Conta> contas = new HashMap<>();
+    private Conta contaC;
+    private Conta contaP;
 
+   Gerenciamento(){
+    contaC = new ContaCorrente(100);
+    contaP = new ContaPupanca(100);
+    contas.put("Corrente", contaC);
+    contas.put("Poupança", contaP);
 
+   }
 
     public final void criarContas(){
-        contas.add("Poupança", new ContaPupanca(100));
-        contas.add("Corrente", new ContaCorrente(100));
+        System.out.println("Contas criadas");
     }
 
-    public final boolean 
+    public final void transferir(char value, double valor){
 
 
+        if( value == 'C' && contaC.getSaldo() >= valor){
+            try{
+                contaC.sacar(valor);
+                contaP.depositar(valor);
+                System.out.println("Valor transferido com sucesso!!");
+            } catch (SaldoInsuficienteException e) {
+                System.out.println("Error"+ e);
+            }
+        }else if(value == 'P' && contaP.getSaldo() >= valor){
+
+            try{
+                contaP.sacar(valor);
+                contaC.depositar(valor);
+                System.out.println("Valor transferido com sucesso!!");
+            } catch (SaldoInsuficienteException e) {
+                System.out.println("Error"+ e);
+            }
+        }
+        System.out.println("Erro na transferencia");
+    }
+
+    public final void sacar(char value, double valor){
+
+        
+        if( value == 'C' && contaC.getSaldo() >= valor){
+            try{
+                contaC.sacar(valor);
+                System.out.println("Valor Sacado com sucesso!!");
+            } catch (SaldoInsuficienteException e) {
+                System.out.println("Error"+ e);
+            }
+        }else if(value == 'P' && contaP.getSaldo() >= valor){
+
+            try{
+                contaP.sacar(valor);
+                System.out.println("Valor sacado com sucesso!!");
+            } catch (SaldoInsuficienteException e) {
+                System.out.println("Error"+ e);
+            }
+        }
+        System.out.println("Erro na transferencia");
+    }
+
+    public final void depositar(char value, double valor){
+        
+        if( value == 'C'){
+            try{
+                contaC.depositar(valor);
+                System.out.println("Valor depositado com sucesso!!");
+            } catch (SaldoInsuficienteException e) {
+                System.out.println("Error"+ e);
+            }
+        }else if(value == 'P'){
+
+            try{
+                contaC.depositar(valor);
+                System.out.println("Valor depositado com sucesso!!");
+            } catch (SaldoInsuficienteException e) {
+                System.out.println("Error"+ e);
+            }
+        }
+        System.out.println("Erro na transferencia");
+    }
+
+    public final void saldos(){
+
+        try{
+            double saldoP = contaP.getSaldo();
+            double saldoC = contaC.getSaldo();
+            System.out.println(" --- Saldos das contas --- \nConta poupança: "+saldoP+"\nConta corrente: "+saldoC+" \n");
+
+        } catch (Exception e ){
+            System.out.println("Erro ao exibir saldo: "+ e);
+        }
+
+    }
 }
-
-
 
 
 class TestePopanca{
@@ -141,6 +222,7 @@ class TestePopanca{
         for( int i = 0; i < valores.length; i++){
             TestSacar(valores[i]);
         }
+    }
 }
 
 class TesteCorrente{
@@ -189,9 +271,15 @@ public class Main{
 
     public static void main(String[] args){
 
-        TesteCorrente testeC = new TesteCorrente();
-        TestePopanca testeP = new TestePopanca();
-        testeC.testeD();
+
+        Gerenciamento g1 = new Gerenciamento();
+
+        g1.criarContas();
+        g1.saldos();
+        
+        // TesteCorrente testeC = new TesteCorrente();
+        // TestePopanca testeP = new TestePopanca();
+        // testeC.testeD();
     }
 }
 
