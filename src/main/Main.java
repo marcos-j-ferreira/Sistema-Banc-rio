@@ -1,5 +1,9 @@
+package main;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 interface Conta{
     void depositar (double valor) throws SaldoInsuficienteException;
@@ -75,6 +79,24 @@ class ContaCorrente implements Conta{
         return saldo;
     }
 }
+
+class Gerenciamento{
+   // Map<String, Conta> contas = new HashMap<>();
+
+
+
+    public final void criarContas(){
+        contas.add("Poupança", new ContaPupanca(100));
+        contas.add("Corrente", new ContaCorrente(100));
+    }
+
+    public final boolean 
+
+
+}
+
+
+
 
 class TestePopanca{
     static Conta c1 = new ContaPupanca(100);
@@ -172,3 +194,6 @@ public class Main{
         testeC.testeD();
     }
 }
+
+// adicionar uma classe para gerenciar as operações nas contas, e adicionar a trasferencia
+// adicionar uma classe que vai ser UI do sistema, onde a main só vai chamar.
