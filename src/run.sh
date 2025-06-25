@@ -1,13 +1,11 @@
- javac -d out $(find main -name "Main.java")
+# Compila todas as classes Java a partir do diretório 'main' e coloca os arquivos compilados no diretório 'out'
+javac -d out $(find main -name "*.java")
 
- cd out 
+# Entra no diretório 'out'
+cd out
 
- wait 
-
+# Executa a classe Main localizada no pacote 'main'
 java main.Main
 
-wait
-
-
-
+# Volta ao diretório anterior
 cd ..
