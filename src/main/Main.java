@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 interface Conta{
     void depositar (double valor) throws SaldoInsuficienteException;
@@ -86,11 +87,10 @@ class Gerenciamento{
     private Conta contaP;
 
    Gerenciamento(){
-    contaC = new ContaCorrente(100);
-    contaP = new ContaPupanca(100);
+    contaC = new ContaCorrente(0);
+    contaP = new ContaPupanca(0);
     contas.put("Corrente", contaC);
     contas.put("Poupança", contaP);
-
    }
 
     public final void criarContas(){
@@ -98,7 +98,6 @@ class Gerenciamento{
     }
 
     public final void transferir(char value, double valor){
-
 
         if( value == 'C' && contaC.getSaldo() >= valor){
             try{
@@ -117,51 +116,30 @@ class Gerenciamento{
             } catch (SaldoInsuficienteException e) {
                 System.out.println("Error"+ e);
             }
+        }else{
+            System.out.println("Erro na transferencia");
         }
-        System.out.println("Erro na transferencia");
     }
 
     public final void sacar(char value, double valor){
-
-        
-        if( value == 'C' && contaC.getSaldo() >= valor){
-            try{
-                contaC.sacar(valor);
-                System.out.println("Valor Sacado com sucesso!!");
-            } catch (SaldoInsuficienteException e) {
-                System.out.println("Error"+ e);
-            }
-        }else if(value == 'P' && contaP.getSaldo() >= valor){
-
-            try{
-                contaP.sacar(valor);
-                System.out.println("Valor sacado com sucesso!!");
-            } catch (SaldoInsuficienteException e) {
-                System.out.println("Error"+ e);
-            }
+        try{
+            Conta conta = (value == 'C') ? contaC : contaP;
+            conta.sacar(valor);
+            System.out.println("Saque realizado!");
+        }catch (SaldoInsuficienteException e){
+            System.out.println("Erro: "+e.getMessage());
         }
-        System.out.println("Erro na transferencia");
     }
 
     public final void depositar(char value, double valor){
-        
-        if( value == 'C'){
-            try{
-                contaC.depositar(valor);
-                System.out.println("Valor depositado com sucesso!!");
-            } catch (SaldoInsuficienteException e) {
-                System.out.println("Error"+ e);
-            }
-        }else if(value == 'P'){
 
-            try{
-                contaC.depositar(valor);
-                System.out.println("Valor depositado com sucesso!!");
-            } catch (SaldoInsuficienteException e) {
-                System.out.println("Error"+ e);
-            }
+        try{
+            Conta conta = (value == 'C') ? contaC : contaP;
+            conta.depositar(valor);
+            System.out.println(" Deposito feito com sucesso");
+        }catch (SaldoInsuficienteException e){
+            System.out.println("Erro: "+ e.getMessage());
         }
-        System.out.println("Erro na transferencia");
     }
 
     public final void saldos(){
@@ -174,10 +152,8 @@ class Gerenciamento{
         } catch (Exception e ){
             System.out.println("Erro ao exibir saldo: "+ e);
         }
-
     }
 }
-
 
 class TestePopanca{
     static Conta c1 = new ContaPupanca(100);
@@ -267,21 +243,117 @@ class TesteCorrente{
     }
 }
 
-public class Main{
+class BancoUI {
+    private Gerenciamento gerenciamento;
+    private Scanner scanner;
 
-    public static void main(String[] args){
+    public BancoUI() {
+        this.gerenciamento = new Gerenciamento();
+        this.scanner = new Scanner(System.in);
+    }
 
+    public void iniciar() {
+        System.out.println("====================================");
+        System.out.println("  BEM-VINDO AO SISTEMA BANCÁRIO  ");
+        System.out.println("====================================");
 
-        Gerenciamento g1 = new Gerenciamento();
+        while (true) {
+            exibirMenuPrincipal();
+            int opcao = lerOpcao();
 
-        g1.criarContas();
-        g1.saldos();
-        
-        // TesteCorrente testeC = new TesteCorrente();
-        // TestePopanca testeP = new TestePopanca();
-        // testeC.testeD();
+            switch (opcao) {
+                case 1:
+                    menuOperacao('D'); // Depósito
+                    break;
+                case 2:
+                    menuOperacao('S'); // Saque
+                    break;
+                case 3:
+                    gerenciamento.saldos();
+                    break;
+                case 4:
+                    menuTransferencia();
+                    break;
+                case 5:
+                    System.out.println("Obrigado por usar nosso sistema. Até logo!");
+                    return;
+                default:
+                    System.out.println("Opção inválida. Por favor, tente novamente.");
+            }
+        }
+    }
+
+    private void exibirMenuPrincipal() {
+        System.out.println("\nMENU PRINCIPAL:");
+        System.out.println("1 - Depositar");
+        System.out.println("2 - Sacar");
+        System.out.println("3 - Ver Saldos");
+        System.out.println("4 - Transferir");
+        System.out.println("5 - Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private int lerOpcao() {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Por favor, digite um número válido.");
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
+
+    private double lerValor() {
+        while (!scanner.hasNextDouble()) {
+            System.out.println("Por favor, digite um valor numérico válido.");
+            scanner.next();
+        }
+        return scanner.nextDouble();
+    }
+
+    private void menuOperacao(char tipoOperacao) {
+        System.out.println("\nSelecione a conta:");
+        System.out.println("C - Conta Corrente");
+        System.out.println("P - Conta Poupança");
+        System.out.print("Escolha: ");
+        char conta = scanner.next().toUpperCase().charAt(0);
+
+        if (conta != 'C' && conta != 'P') {
+            System.out.println("Opção de conta inválida.");
+            return;
+        }
+
+        System.out.print("Digite o valor: ");
+        double valor = lerValor();
+
+        if (tipoOperacao == 'D') {
+            gerenciamento.depositar(conta, valor);
+        } else if (tipoOperacao == 'S') {
+            gerenciamento.sacar(conta, valor);
+        }
+    }
+
+    private void menuTransferencia() {
+        System.out.println("\nTRANSFERÊNCIA ENTRE CONTAS");
+        System.out.println("Selecione a conta de origem:");
+        System.out.println("C - Conta Corrente");
+        System.out.println("P - Conta Poupança");
+        System.out.print("Escolha: ");
+        char contaOrigem = scanner.next().toUpperCase().charAt(0);
+
+        if (contaOrigem != 'C' && contaOrigem != 'P') {
+            System.out.println("Opção de conta inválida.");
+            return;
+        }
+
+        System.out.print("Digite o valor para transferir: ");
+        double valor = lerValor();
+
+        gerenciamento.transferir(contaOrigem, valor);
     }
 }
 
-// adicionar uma classe para gerenciar as operações nas contas, e adicionar a trasferencia
-// adicionar uma classe que vai ser UI do sistema, onde a main só vai chamar.
+public class Main {
+    public static void main(String[] args) {
+        BancoUI bancoUI = new BancoUI();
+        bancoUI.iniciar();
+    }
+}
